@@ -10,9 +10,9 @@ namespace FCG.Infraestructure.Repositories
     {
         protected readonly IMongoCollection<T> _collection;
 
-        public BaseRepository(IMongoDatabase database, string collectionName)
+        public BaseRepository(IMongoDatabase database)
         {
-            _collection = database.GetCollection<T>(collectionName);
+            _collection = database.GetCollection<T>(nameof(T));
         }
 
         public async Task<List<T>> GetAllAsync() => await _collection.Find(_ => true).ToListAsync();

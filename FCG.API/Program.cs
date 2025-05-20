@@ -1,4 +1,9 @@
 
+using FCG.API.Helpers;
+using FCG.Application.Services;
+using FCG.Domain.Interfaces.Repositories;
+using FCG.Domain.Interfaces.Services;
+using FCG.Infraestructure.Repositories;
 using MongoDB.Driver;
 
 namespace FCG
@@ -11,7 +16,10 @@ namespace FCG
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(x =>
+            {
+                x.JsonSerializerOptions.Converters.Add(new ObjectIdJsonConverter());
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -38,6 +46,9 @@ namespace FCG
                 var url = new MongoUrlBuilder(connection);
                 return s.GetService<IMongoClient>()!.GetDatabase(url.DatabaseName);
             });
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
