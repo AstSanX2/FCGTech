@@ -1,4 +1,6 @@
 
+using MongoDB.Driver;
+
 namespace FCG
 {
     public class Program
@@ -13,6 +15,29 @@ namespace FCG
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var config = builder.Configuration;
+            builder.Services.AddSingleton<IMongoClient>(s =>
+            {
+                var section = config.GetSection("MongoDB");
+                var connection = section.GetSection("ConnectionString").Value;
+
+                var url = new MongoUrlBuilder(connection);
+
+                var client = new MongoClient(new MongoClientSettings()
+                {
+                    Server = url.Server
+                });
+                return client;
+            });
+
+            builder.Services.AddSingleton(s =>
+            {
+                var section = config.GetSection("MongoDB");
+                var connection = section.GetSection("ConnectionString").Value;
+                var url = new MongoUrlBuilder(connection);
+                return s.GetService<IMongoClient>()!.GetDatabase(url.DatabaseName);
+            });
 
             var app = builder.Build();
 
