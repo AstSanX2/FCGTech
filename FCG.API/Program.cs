@@ -1,9 +1,9 @@
 
+using FCG.API.Application.Services;
+using FCG.API.Domain.Interfaces.Repositories;
+using FCG.API.Domain.Interfaces.Services;
 using FCG.API.Helpers;
-using FCG.Application.Services;
-using FCG.Domain.Interfaces.Repositories;
-using FCG.Domain.Interfaces.Services;
-using FCG.Infraestructure.Repositories;
+using FCG.API.Infraestructure.Repositories;
 using MongoDB.Driver;
 
 namespace FCG

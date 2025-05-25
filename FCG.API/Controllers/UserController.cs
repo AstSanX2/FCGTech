@@ -1,5 +1,6 @@
-﻿using FCG.Domain.Entities;
-using FCG.Domain.Interfaces.Services;
+﻿using FCG.API.Domain.DTO.UserDTO;
+using FCG.API.Domain.Interfaces.Services;
+using FCG.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -10,8 +11,10 @@ namespace FCG.API.Controllers
     public class UsersController(IUserService service) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<User>>> Get() =>
-            Ok(await service.GetAllAsync());
+        public async Task<ActionResult<List<ProjectUserDTO>>> Get()
+        {
+            return Ok(await service.GetAllAsync());
+        }
 
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<User>> Get(ObjectId id)
@@ -21,14 +24,14 @@ namespace FCG.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post(User user)
+        public async Task<ActionResult<User>> Post(CreateUserDTO user)
         {
             await service.CreateAsync(user);
             return CreatedAtAction(nameof(Get), user);
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Put(string id, User user)
+        public async Task<IActionResult> Put(string id, UpdateUserDTO user)
         {
             var existing = await service.GetByIdAsync(ObjectId.Parse(id));
             if (existing is null) return NotFound();
