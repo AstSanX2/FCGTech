@@ -11,23 +11,23 @@ namespace FCG.API.Controllers
     public class UsersController(IUserService service) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<ProjectUserDTO>>> Get()
+        public async Task<IActionResult> Get()
         {
             return Ok(await service.GetAllAsync());
         }
 
         [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<User>> Get(ObjectId id)
+        public async Task<IActionResult> Get(ObjectId id)
         {
             var user = await service.GetByIdAsync(id);
             return user is null ? NotFound() : Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post(CreateUserDTO user)
+        public async Task<IActionResult> Post(CreateUserDTO user)
         {
-            await service.CreateAsync(user);
-            return CreatedAtAction(nameof(Get), user);
+            var createdUser = await service.CreateAsync(user);
+            return CreatedAtAction(nameof(Get), createdUser);
         }
 
         [HttpPut("{id:length(24)}")]

@@ -1,6 +1,7 @@
 ﻿using FCG.API.Domain.DTO.UserDTO;
 using FCG.API.Domain.Interfaces.Repositories;
 using FCG.API.Domain.Interfaces.Services;
+using FCG.API.Domain.Models.Response;
 using MongoDB.Bson;
 
 namespace FCG.API.Application.Services
@@ -22,10 +23,19 @@ namespace FCG.API.Application.Services
             return await UserRepository.FindAsync<ProjectUserDTO>(filterDto);
         }
 
-        public async Task<ProjectUserDTO> CreateAsync(CreateUserDTO createDto)
+        public async Task<ResponseModel<ProjectUserDTO>> CreateAsync(CreateUserDTO createDto)
         {
+            var validationResult = createDto.Validate();
+
+            if (validationResult.HasError)
+            {
+                return ResponseModel<ProjectUserDTO>.BadRequest(validationResult.ToString());
+            }
+
             var result = await UserRepository.CreateAsync(createDto);
-            return await UserRepository.GetByIdAsync<ProjectUserDTO>(result._id);
+
+            var resultModel = await UserRepository.GetByIdAsync<ProjectUserDTO>(result._id);
+            return ResponseModel<ProjectUserDTO>.Ok(resultModel);
         }
 
         public async Task UpdateAsync(ObjectId id, UpdateUserDTO updateDto)

@@ -32,7 +32,12 @@ namespace FCG.API.Domain.DTO.UserDTO
 
         public override Expression<Func<User, ProjectUserDTO>> ProjectExpression()
         {
-            return x => new ProjectUserDTO(x._id, x.Name, x.Email);
+            return x => new ProjectUserDTO
+            {
+                _id = x._id,
+                Name = x.Name,
+                Email = x.Email
+            };
         }
     }
 }

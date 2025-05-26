@@ -18,7 +18,7 @@ namespace FCG.API.Infraestructure.Repositories
             return dtos;
         }
 
-        public virtual async Task<ProjectDTO> GetByIdAsync<ProjectDTO>(ObjectId id) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new()
+        public virtual async Task<ProjectDTO?> GetByIdAsync<ProjectDTO>(ObjectId id) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new()
         {
             var filter = Builders<TEntity>.Filter.Eq("_id", id);
             var projection = new ProjectDTO().ProjectExpression();
@@ -44,6 +44,7 @@ namespace FCG.API.Infraestructure.Repositories
         public virtual async Task<TEntity> CreateAsync<CreateDTO>(CreateDTO dto) where CreateDTO : BaseCreateDTO<TEntity>
         {
             var entity = dto.ToEntity();
+
             await _collection.InsertOneAsync(entity);
             return entity;
         }

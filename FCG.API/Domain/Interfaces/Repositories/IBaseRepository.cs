@@ -12,7 +12,7 @@ namespace FCG.API.Domain.Interfaces.Repositories
         Task<List<ProjectDTO>> FindAsync<ProjectDTO>(IFilterDTO<TEntity> dto) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new();
         Task<ProjectDTO> FindOneAsync<ProjectDTO>(IFilterDTO<TEntity> dto) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new();
         Task<List<ProjectDTO>> GetAllAsync<ProjectDTO>() where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new();
-        Task<ProjectDTO> GetByIdAsync<ProjectDTO>(ObjectId id) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new();
+        Task<ProjectDTO?> GetByIdAsync<ProjectDTO>(ObjectId id) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new();
         Task UpdateAsync<UpdateDTO>(ObjectId id, UpdateDTO dto) where UpdateDTO : BaseUpdateDTO<TEntity>;
     }
 }

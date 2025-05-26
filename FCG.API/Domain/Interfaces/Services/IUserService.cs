@@ -1,11 +1,12 @@
 ﻿using FCG.API.Domain.DTO.UserDTO;
+using FCG.API.Domain.Models.Response;
 using MongoDB.Bson;
 
 namespace FCG.API.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<ProjectUserDTO> CreateAsync(CreateUserDTO createDto);
+        Task<ResponseModel<ProjectUserDTO>> CreateAsync(CreateUserDTO createDto);
         Task DeleteAsync(ObjectId id);
         Task<List<ProjectUserDTO>> FindUsersAsync(FilterUserDTO filterDto);
         Task<List<ProjectUserDTO>> GetAllAsync();
