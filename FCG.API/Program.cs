@@ -48,7 +48,9 @@ namespace FCG
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IGameService, GameService>();
 
             var app = builder.Build();
 
