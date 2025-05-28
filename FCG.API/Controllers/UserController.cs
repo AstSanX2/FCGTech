@@ -1,6 +1,8 @@
 ﻿using FCG.API.Domain.DTO.UsersDTO;
+using FCG.API.Domain.Enums;
 using FCG.API.Domain.Interfaces.Services;
 using FCG.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -11,6 +13,7 @@ namespace FCG.API.Controllers
     public class UsersController(IUserService service) : ControllerBase
     {
         [HttpGet]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Get()
         {
             return Ok(await service.GetAllAsync());
