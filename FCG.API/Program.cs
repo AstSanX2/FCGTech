@@ -5,6 +5,7 @@ using FCG.API.Domain.Interfaces.Services;
 using FCG.API.Helpers;
 using FCG.API.Helpers.Extensions;
 using FCG.API.Infraestructure.Repositories;
+using FCG.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -105,6 +106,8 @@ namespace FCG
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddTransient<GlobalRequestMiddleware>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -113,6 +116,8 @@ namespace FCG
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<GlobalRequestMiddleware>();
 
             app.UseHttpsRedirection();
 
