@@ -1,4 +1,4 @@
-﻿using FCG.API.Domain.DTO.UserDTO;
+﻿using FCG.API.Domain.DTO.UsersDTO;
 using FCG.API.Domain.Interfaces.Services;
 using FCG.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;

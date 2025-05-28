@@ -4,6 +4,7 @@ using FCG.API.Domain.Interfaces.Repositories;
 using FCG.Domain.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 
 namespace FCG.API.Infraestructure.Repositories
 {
@@ -34,11 +35,23 @@ namespace FCG.API.Infraestructure.Repositories
             return dtos;
         }
 
+        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>>? filterExpression)
+        {
+            var entities = await _collection.Find(filterExpression).ToListAsync();
+            return entities;
+        }
+
         public virtual async Task<ProjectDTO> FindOneAsync<ProjectDTO>(IFilterDTO<TEntity> dto) where ProjectDTO : IProjectable<TEntity, ProjectDTO>, new()
         {
             var filterExpression = dto.GetFilterExpression();
             var projection = new ProjectDTO().ProjectExpression();
             return await _collection.Find(filterExpression).Project(projection).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>>? filterExpression)
+        {
+            var entities = await _collection.Find(filterExpression).FirstAsync();
+            return entities;
         }
 
         public virtual async Task<TEntity> CreateAsync<CreateDTO>(CreateDTO dto) where CreateDTO : BaseCreateDTO<TEntity>

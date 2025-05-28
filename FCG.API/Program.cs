@@ -49,6 +49,7 @@ namespace FCG
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             var app = builder.Build();
 

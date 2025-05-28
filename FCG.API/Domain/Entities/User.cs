@@ -1,15 +1,21 @@
-﻿namespace FCG.Domain.Entities
+﻿using FCG.API.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
+
+namespace FCG.Domain.Entities
 {
     public class User : BaseEntity
     {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public UserRole Role { get; set; }
 
         public User(string name, string email)
         {
             Name = name;
             Email = email;
+            Role = UserRole.UserApp;
         }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
