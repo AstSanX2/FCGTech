@@ -2,7 +2,7 @@
 using FCG.Domain.Entities;
 using MongoDB.Driver;
 
-namespace FCG.API.Domain.DTO.UserDTO
+namespace FCG.API.Domain.DTO.UsersDTO
 {
     public class UpdateUserDTO : BaseUpdateDTO<User>
     {
