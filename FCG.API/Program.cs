@@ -55,7 +55,9 @@ namespace FCG
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -65,7 +67,7 @@ namespace FCG
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
-                    Description = "Entre com um Jwt Token v·lido",
+                    Description = "Entre com um Jwt Token v√°lido",
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
