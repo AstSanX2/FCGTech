@@ -1,0 +1,14 @@
+﻿using FCG.API.Infraestructure.Options;
+
+namespace FCG.API.Helpers.Extensions
+{
+    public static class ConfigurationExtensions
+    {
+        public static JwtOptions? GetJwtOptions(this IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+
+            return jwtSettings is not null ? jwtSettings : throw new Exception("jwtSettings não definido");
+        }
+    }
+}

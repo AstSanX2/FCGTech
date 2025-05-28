@@ -1,27 +1,28 @@
-﻿using FCG.API.Domain.DTO.Bases;
-using FCG.API.Domain.DTO.Bases.Interfaces;
-using FCG.API.Domain.Models.Validation;
+﻿using FCG.API.Domain.DTO.Bases.Interfaces;
+using FCG.API.Domain.DTO.Bases;
 using FCG.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using FCG.API.Domain.Models.Validation;
+using FCG.API.Helpers.Extensions;
 
-namespace FCG.API.Domain.DTO.UserDTO
+namespace FCG.API.Domain.DTO.AuthenticationDTO
 {
-    public class CreateUserDTO : BaseCreateDTO<User>, IValidator
+    public class RegisterUserDTO : BaseCreateDTO<User>, IValidator
     {
-        public string? Name { get; set; }
-        public string? Email { get; set; }
-        public string? Password { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public CreateUserDTO()
-        {
-            
-        }
+        public string Email { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
 
         public override User ToEntity()
         {
             return new User
             {
                 Name = Name,
-                Email = Email
+                Email = Email,
+                Password = Password.ToHash(),
+                Role = Enums.UserRole.UserApp
             };
         }
 
@@ -77,6 +78,5 @@ namespace FCG.API.Domain.DTO.UserDTO
 
             return hasLetter && hasDigit && hasSpecial;
         }
-
     }
 }

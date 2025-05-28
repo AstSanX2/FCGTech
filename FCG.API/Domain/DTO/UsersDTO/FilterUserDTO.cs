@@ -3,7 +3,7 @@ using FCG.Domain.Entities;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 
-namespace FCG.API.Domain.DTO.UserDTO
+namespace FCG.API.Domain.DTO.UsersDTO
 {
     public class FilterUserDTO : BaseFilterDTO<User>
     {

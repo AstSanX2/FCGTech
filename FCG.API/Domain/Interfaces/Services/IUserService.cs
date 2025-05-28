@@ -1,4 +1,4 @@
-﻿using FCG.API.Domain.DTO.UserDTO;
+﻿using FCG.API.Domain.DTO.UsersDTO;
 using FCG.API.Domain.Models.Response;
 using MongoDB.Bson;
 

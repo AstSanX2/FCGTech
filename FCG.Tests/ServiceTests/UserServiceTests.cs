@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using FCG.API.Application.Services;
-using FCG.API.Domain.DTO.UserDTO;
+using FCG.API.Domain.DTO.UsersDTO;
 using FCG.API.Domain.Interfaces.Repositories;
 using FCG.API.Domain.Interfaces.Services;
 using FCG.Domain.Entities;
