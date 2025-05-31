@@ -17,7 +17,6 @@ namespace FGC.Tests.ServiceTests
 
         public GameServiceTests()
         {
-            _stubList = [];
         }
 
         protected override void InitStubs()
@@ -75,16 +74,20 @@ namespace FGC.Tests.ServiceTests
 
             Assert.NotNull(result);
             Assert.Equal(_stubList!.Count, result.Count);
-            Assert.Contains(result, e => e._id == ObjectId.Empty);
         }
 
         [Fact]
         public async Task GetByIdAsync_ReturnsEntity()
         {
-            var result = await _service!.GetByIdAsync(ObjectId.Empty);
+            var item = _fixture.Build<Game>()
+                   .With(e => e._id, ObjectId.GenerateNewId)
+                   .Create();
+            _stubList.Add(item);
+
+            var result = await _service!.GetByIdAsync(item._id);
 
             Assert.NotNull(result);
-            Assert.Equal(ObjectId.Empty, result!._id);
+            Assert.Equal(item._id, result!._id);
         }
 
         [Fact]
