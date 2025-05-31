@@ -1,19 +1,18 @@
-
 using FCG.API.Application.Services;
 using FCG.API.Domain.Interfaces.Repositories;
 using FCG.API.Domain.Interfaces.Services;
 using FCG.API.Helpers;
 using FCG.API.Helpers.Extensions;
+using FCG.API.Infraestructure.Migration;
 using FCG.API.Infraestructure.Repositories;
 using FCG.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using System.Text;
 
-namespace FCG
+namespace FCG.API
 {
     public class Program
     {
@@ -85,7 +84,7 @@ namespace FCG
                                 Id = "Bearer"
                             }
                         },
-                        Array.Empty<String>()
+                        Array.Empty<string>()
                     }
                 });
             });
@@ -109,6 +108,7 @@ namespace FCG
             builder.Services.AddAuthorization();
 
             builder.Services.AddTransient<GlobalRequestMiddleware>();
+            builder.Services.AddHostedService<MongoSeeder>();
 
             var app = builder.Build();
 

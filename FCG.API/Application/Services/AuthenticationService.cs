@@ -1,17 +1,12 @@
-﻿using FCG.API.Domain.Enums;
-using FCG.API.Domain.DTO.AuthenticationDTO;
+﻿using FCG.API.Domain.DTO.AuthenticationDTO;
 using FCG.API.Domain.DTO.UsersDTO;
 using FCG.API.Domain.Interfaces.Repositories;
 using FCG.API.Domain.Interfaces.Services;
 using FCG.API.Domain.Models.Response;
 using FCG.API.Helpers.Extensions;
 using FCG.Domain.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -25,7 +20,7 @@ namespace FCG.API.Application.Services
             var validationResult = registerUserRequest.Validate();
             if (validationResult.HasError)
                 return ResponseModel<ObjectId>.BadRequest(validationResult.ToString());
-            
+
             var result = await UserRepository.CreateAsync(registerUserRequest);
 
             return ResponseModel<ObjectId>.Ok(result._id);
