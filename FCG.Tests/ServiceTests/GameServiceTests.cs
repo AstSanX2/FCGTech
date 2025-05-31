@@ -106,7 +106,7 @@ namespace FGC.Tests.ServiceTests
             var response = await _service.CreateAsync(dto);
 
             Assert.False(response.HasError);
-            Assert.Equal(200, response.StatusCode);
+            Assert.Equal(201, response.StatusCode);
             Assert.NotNull(response.Data);
 
             _mockRepo.Verify(r => r.CreateAsync(dto), Times.Once);

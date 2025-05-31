@@ -1,5 +1,7 @@
 ﻿using FCG.API.Domain.DTO.GameDTO;
+using FCG.API.Domain.Enums;
 using FCG.API.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -23,6 +25,7 @@ namespace FCG.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Post(CreateGameDTO game)
         {
             var createdGame = await service.CreateAsync(game);
@@ -30,6 +33,7 @@ namespace FCG.API.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Put(string id, UpdateGameDTO game)
         {
             var existingGame = await service.GetByIdAsync(ObjectId.Parse(id));
@@ -40,6 +44,7 @@ namespace FCG.API.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Delete(string id)
         {
             var existingGame = await service.GetByIdAsync(ObjectId.Parse(id));

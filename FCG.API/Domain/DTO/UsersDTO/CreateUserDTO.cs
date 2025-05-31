@@ -1,6 +1,7 @@
 ﻿using FCG.API.Domain.DTO.Bases;
 using FCG.API.Domain.DTO.Bases.Interfaces;
 using FCG.API.Domain.Models.Validation;
+using FCG.API.Helpers.Extensions;
 using FCG.Domain.Entities;
 
 namespace FCG.API.Domain.DTO.UsersDTO
@@ -21,7 +22,8 @@ namespace FCG.API.Domain.DTO.UsersDTO
             return new User
             {
                 Name = Name,
-                Email = Email
+                Email = Email,
+                Password = Password.ToHash()
             };
         }
 

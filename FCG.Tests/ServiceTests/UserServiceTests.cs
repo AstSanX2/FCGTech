@@ -106,12 +106,54 @@ namespace FGC.Tests.ServiceTests
 
             // Assert
             Assert.False(response.HasError);
-            Assert.Equal(200, response.StatusCode);
+            Assert.Equal(201, response.StatusCode);
             Assert.NotNull(response.Data);
 
             _mockRepo.Verify(r => r.CreateAsync(dto), Times.Once);
             _mockRepo.Verify(r => r.GetByIdAsync<ProjectUserDTO>(response.Data._id), Times.Once);
         }
+
+        [Fact]
+        public async Task CreateAsync_InvalidDto_ReturnsBadRequest()
+        {
+            // Arrange
+            var invalidDtoMock = new Mock<CreateUserDTO>();
+
+            var invalidDto = invalidDtoMock.Object;
+
+            // Act
+            var response = await _service.CreateAsync(invalidDto);
+
+            // Assert
+            Assert.True(response.HasError);
+            Assert.Equal(400, response.StatusCode);
+
+            _mockRepo.Verify(r => r.CreateAsync(It.IsAny<CreateUserDTO>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CreateAdminAsync_ValidDto_CallsRepository_AndReturnsExpectedResult()
+        {
+            // Arrange
+            var adminDto = new CreateUserAdminDTO
+            {
+                Name = "Admin Teste",
+                Email = "admin@email.com",
+                Password = "Senha@123"
+            };
+
+            // Act
+            var response = await _service.CreateAdminAsync(adminDto);
+
+            // Assert
+            Assert.False(response.HasError);
+            Assert.Equal(201, response.StatusCode);
+            Assert.NotNull(response.Data);
+
+            _mockRepo.Verify(r => r.CreateAsync(adminDto), Times.Once);
+            _mockRepo.Verify(r => r.GetByIdAsync<ProjectUserDTO>(response.Data._id), Times.Once);
+        }
+
 
 
         [Fact]

@@ -50,7 +50,7 @@ namespace FCG.API.Infraestructure.Repositories
 
         public virtual async Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>>? filterExpression)
         {
-            var entities = await _collection.Find(filterExpression).FirstAsync();
+            var entities = await _collection.Find(filterExpression).FirstOrDefaultAsync();
             return entities;
         }
 

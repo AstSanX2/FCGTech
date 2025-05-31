@@ -1,4 +1,5 @@
-﻿using FCG.API.Domain.Interfaces.Repositories;
+﻿using FCG.API.Domain.DTO.Bases;
+using FCG.API.Domain.Interfaces.Repositories;
 using FCG.Domain.Entities;
 using MongoDB.Driver;
 

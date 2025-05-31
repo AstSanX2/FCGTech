@@ -35,7 +35,7 @@ namespace FCG.API.Application.Services
             var result = await GameRepository.CreateAsync(createDto);
 
             var resultModel = await GameRepository.GetByIdAsync<ProjectGameDTO>(result._id);
-            return ResponseModel<ProjectGameDTO>.Ok(resultModel);
+            return ResponseModel<ProjectGameDTO>.Created(resultModel);
         }
 
         public async Task UpdateAsync(ObjectId id, UpdateGameDTO updateDto)

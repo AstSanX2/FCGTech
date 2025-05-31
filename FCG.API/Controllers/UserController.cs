@@ -33,9 +33,27 @@ namespace FCG.API.Controllers
             return CreatedAtAction(nameof(Get), createdUser);
         }
 
+        [HttpPost("admin")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        public async Task<IActionResult> CreateAdmin(CreateUserAdminDTO user)
+        {
+            var createdUser = await service.CreateAsync(user);
+            return CreatedAtAction(nameof(Get), createdUser);
+        }
+
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Put(string id, UpdateUserDTO user)
         {
+            var userId = User.FindFirst("UserId")?.Value;
+
+            if (userId == null) return Unauthorized();
+
+            if (userId != id)
+            {
+                var isAdmin = User.IsInRole(UserRole.Admin.ToString());
+                if (!isAdmin) return Unauthorized();
+            }
+
             var existing = await service.GetByIdAsync(ObjectId.Parse(id));
             if (existing is null) return NotFound();
 
@@ -44,8 +62,9 @@ namespace FCG.API.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Delete(string id)
-        {
+        { 
             var existing = await service.GetByIdAsync(ObjectId.Parse(id));
             if (existing is null) return NotFound();
 
