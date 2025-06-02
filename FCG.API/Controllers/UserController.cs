@@ -27,6 +27,7 @@ namespace FCG.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Post(CreateUserDTO user)
         {
             var createdUser = await service.CreateAsync(user);
@@ -42,18 +43,9 @@ namespace FCG.API.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Put(string id, UpdateUserDTO user)
         {
-            var userId = User.FindFirst("UserId")?.Value;
-
-            if (userId == null) return Unauthorized();
-
-            if (userId != id)
-            {
-                var isAdmin = User.IsInRole(UserRole.Admin.ToString());
-                if (!isAdmin) return Unauthorized();
-            }
-
             var existing = await service.GetByIdAsync(ObjectId.Parse(id));
             if (existing is null) return NotFound();
 
