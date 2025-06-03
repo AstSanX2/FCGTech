@@ -4,29 +4,6 @@ API REST em .NET 8 para gerenciamento de usuários e jogos adquiridos, atendendo
 
 ---
 
-## Índice
-
-1. [Visão Geral](#visão-geral)  
-2. [Funcionalidades](#funcionalidades)  
-3. [Tecnologias Utilizadas](#tecnologias-utilizadas)  
-4. [Pré-requisitos](#pré-requisitos)  
-5. [Instalação e Configuração](#instalação-e-configuração)  
-   1. [Clone do Repositório](#1-clone-do-repositório)  
-   2. [Configuração do MongoDB](#2-configuração-do-mongodb)  
-   3. [Variáveis de Configuração (appsettings.json)](#3-variáveis-de-configuração-appsettingsjson)  
-6. [Como Executar a Aplicação](#como-executar-a-aplicação)  
-   1. [Rodando localmente](#1-rodando-localmente)  
-   2. [Docker (Opcional)](#2-docker-opcional)  
-7. [Testes Automatizados](#testes-automatizados)  
-8. [Arquitetura e Organização do Código](#arquitetura-e-organização-do-código)  
-9. [Documentação Swagger](#documentação-swagger)  
-10. [Documentação Mongodb](#documentação-mongodb)
-    1. User
-    2. Game
-    3. Indexes
-    4. Justificativas de Modelagem
----
-
 ## Visão Geral
 
 Este projeto implementa o **mínimo produto viável (MVP)** de uma plataforma de venda de jogos e gestão de usuários, voltada para a comunidade FIAP/Alura/PM3.
