@@ -139,7 +139,7 @@ Em FCG.API/appsettings.json, configure:
    - Nos primeiros logs, o MongoSeeder verifica se existe um usuário com role = Admin. Se não houver, insere um Admin “padrão” (altere credenciais manualmente ou via código).
 
 5. Acesse o Swagger para documentação e testes:  
-   https://localhost:5001/swagger/index.html
+   https://localhost:7093/swagger/index.html
 
 ---
 
