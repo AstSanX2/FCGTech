@@ -266,10 +266,10 @@ Campos:
 - _id (ObjectId): chave primária gerada automaticamente pelo MongoDB.
 - Name (String): nome do usuário. Exemplo: "Guilherme".
 - Email (String): e-mail do usuário. Exemplo: "guilherme@gmail.com".
-- Password (String): hash da senha do usuário (SHA-256 ou similar). Exemplo: "466c7a2f84f0acda77081a4ae5572c52486577b05e3ee25f8c69b26dcdab".
+- Password (String): hash da senha do usuário .Exemplo: "466c7a2f84f0acda77081a4ae5572c52486577b05e3ee25f8c69b26dcdab".
 - Role (NumberInt): nível de acesso do usuário. Exemplo: 2 (inteiro). Pode corresponder a perfis como:
-  - 1 = UserApp (usuário comum)
-  - 2 = Admin (administrador)
+  - 1 = Admin (administrador)
+  - 2 = UserApp (usuário comum)
 
 Exemplo de documento real na coleção Users:
 ``` json
