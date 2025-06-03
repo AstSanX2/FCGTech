@@ -20,7 +20,11 @@ API REST em .NET 8 para gerenciamento de usuários e jogos adquiridos, atendendo
 7. [Testes Automatizados](#testes-automatizados)  
 8. [Arquitetura e Organização do Código](#arquitetura-e-organização-do-código)  
 9. [Documentação Swagger](#documentação-swagger)  
-
+10. [Documentação Mongodb](#documentação-mongodb)
+    1. User
+    2. Game
+    3. Indexes
+    4. Justificativas de Modelagem
 ---
 
 ## Visão Geral
@@ -275,5 +279,88 @@ https://localhost:5001/swagger/index.html
 - Explore todos os schemas de request/response.  
 - Teste cada rota diretamente.  
 - Use o botão “Authorize” para inserir o Bearer Token e testar rotas protegidas.
-
+  
 ---
+
+## Documentação MongoDB
+
+### User
+Campos:
+- _id (ObjectId): chave primária gerada automaticamente pelo MongoDB.
+- Name (String): nome do usuário. Exemplo: "Guilherme".
+- Email (String): e-mail do usuário. Exemplo: "guilherme@gmail.com".
+- Password (String): hash da senha do usuário (SHA-256 ou similar). Exemplo: "466c7a2f84f0acda77081a4ae5572c52486577b05e3ee25f8c69b26dcdab".
+- Role (NumberInt): nível de acesso do usuário. Exemplo: 2 (inteiro). Pode corresponder a perfis como:
+  - 1 = UserApp (usuário comum)
+  - 2 = Admin (administrador)
+
+Exemplo de documento real na coleção Users:
+``` json
+{
+  "_id" : ObjectId("683e2f259b0f3a4dd9778bc7"),
+  "Name" : "Guilherme",
+  "Email" : "guilherme@gmail.com",
+  "Password" : "466c7a2f84f0acda77081a4ae5572c52486577b05e3ee25f8c69b26dcdab",
+  "Role" : NumberInt(2)
+}
+```
+
+### Game
+
+Campos:
+- _id (ObjectId): chave primária gerada automaticamente pelo MongoDB.
+- Name (String): nome do jogo.
+- Description (String): descrição breve do jogo.
+- Category (String): categoria do jogo.
+- ReleaseDate (Date - ISODate): data de lançamento do jogo.
+- LastUpdateDate (Date - ISODate): data da última atualização do registro do jogo. 
+- Price (NumberDecimal): preço do jogo.
+
+Exemplo de documentos reais na coleção Games:
+``` json
+{
+  "_id" : ObjectId("683b64ae483edd08343a5645"),
+  "Name" : "GTA",
+  "Description" : "CJ Retorna para sua cidade...",
+  "Category" : "Ação",
+  "ReleaseDate" : ISODate("2025-05-31T20:20:38.990+0000"),
+  "LastUpdateDate" : ISODate("2025-05-31T20:20:38.990+0000"),
+  "Price" : NumberDecimal("100.59")
+},
+{
+  "_id" : ObjectId("683e2ed59b0f3a4dd9778bc6"),
+  "Name" : "Homem Aranha",
+  "Description" : "O Rei do crime está de volta...",
+  "Category" : "Aventura",
+  "ReleaseDate" : ISODate("2025-06-02T23:07:22.129+0000"),
+  "LastUpdateDate" : ISODate("2025-06-02T23:07:22.129+0000"),
+  "Price" : NumberDecimal("50.10")
+}
+```
+
+### Índices (Indexes)
+
+- Users:
+  - { Email: 1 } (unique: true)  
+    - Para garantir que não haja dois usuários com o mesmo e-mail.
+
+- Games:
+  - { Name: 1 }  
+    - Para acelerar buscas por nome do jogo.
+  - { Category: 1 }  
+    - Para filtragem por categoria.
+  - { ReleaseDate: -1 }  
+    - Para ordenação rápida por data de lançamento.
+
+
+### Justificativas de Modelagem
+
+- Na coleção Users:
+  - O campo Email é indexado como único para impedir duplicidade de cadastros.
+  - A Role é armazenada como NumberInt para facilitar comparações numéricas de permissão.
+
+- Na coleção Games:
+  - Os campos ReleaseDate e LastUpdateDate utilizam ISODate para manter padrão de data/hora compatível com o driver MongoDB.
+  - O uso de NumberDecimal em Price garante precisão ao armazenar valores monetários.
+  - Não há embedding de informações de usuário dentro de Games, pois a relação principal é gerenciada pela lógica da aplicação (por exemplo, uma tabela de associação ou conservação de IDs em arrays se necessário em fases futuras).
+
