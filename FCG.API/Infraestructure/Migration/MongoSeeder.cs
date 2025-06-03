@@ -57,7 +57,7 @@ namespace FCG.API.Infraestructure.Migration
                     Name = "admin",
                     Password = "Senha@123".ToHash(),
                     Role = Domain.Enums.UserRole.Admin,
-                    Email = "admin@seudominio.com"
+                    Email = "admin@fcg.com"
                 };
 
                 await _userCollection.InsertOneAsync(admin, cancellationToken: cancellationToken);
