@@ -31,4 +31,4 @@ jobs:
       - name: Restore
         run: dotnet restore ./FCG.sln
       - name: Test
-        run: dotnet test ./FCG.sln --verbosity normal --no-build
+        run: dotnet test ./FCG.sln --verbosity normal
