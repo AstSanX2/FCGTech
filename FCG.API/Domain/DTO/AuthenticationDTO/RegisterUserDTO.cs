@@ -1,9 +1,8 @@
-﻿using FCG.API.Domain.DTO.Bases.Interfaces;
-using FCG.API.Domain.DTO.Bases;
-using FCG.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using FCG.API.Domain.DTO.Bases;
+using FCG.API.Domain.DTO.Bases.Interfaces;
 using FCG.API.Domain.Models.Validation;
 using FCG.API.Helpers.Extensions;
+using FCG.Domain.Entities;
 
 namespace FCG.API.Domain.DTO.AuthenticationDTO
 {

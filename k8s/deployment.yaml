@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fcg-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fcg-api
+  template:
+    metadata:
+      labels:
+        app: fcg-api
+    spec:
+      containers:
+        - name: fcg-api
+          image: 304935836160.dkr.ecr.us-east-2.amazonaws.com/fgc-api:latest
+          ports:
+            - containerPort: 80

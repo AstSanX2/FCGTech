@@ -13,7 +13,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore
         run: dotnet restore ./FCG.sln
       - name: Build
@@ -27,6 +27,8 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x' 
+      - name: Restore
+        run: dotnet restore ./FCG.sln
       - name: Test
         run: dotnet test ./FCG.sln --verbosity normal

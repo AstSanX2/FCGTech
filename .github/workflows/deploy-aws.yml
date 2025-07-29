@@ -1,0 +1,87 @@
+name: Deploy to AWS EKS
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ./FCG.sln
+
+      - name: Build
+        run: dotnet build ./FCG.sln --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish ./FCG.API/FCG.API.csproj -c Release -o ./out
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ./FCG.sln
+
+      - name: Test
+        run: dotnet test ./FCG.sln --verbosity normal
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push Docker image to ECR
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f ./FCG.API/Dockerfile -t $ECR_REPOSITORY:$IMAGE_TAG ./FCG.API
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to EKS
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          kubectl set image deployment/fcg-api fcg-api=$ECR_REPOSITORY:$IMAGE_TAG

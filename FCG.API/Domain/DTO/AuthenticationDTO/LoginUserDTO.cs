@@ -14,10 +14,10 @@ namespace FCG.API.Domain.DTO.AuthenticationDTO
             var response = new ValidationResultModel();
 
             if (string.IsNullOrWhiteSpace(Email))
-                response.AddError("Email não preenchido");      
-            else if (!IsValidEmail(Email))      
+                response.AddError("Email não preenchido");
+            else if (!IsValidEmail(Email))
                 response.AddError("Formato de email inválido");
-            
+
             if (string.IsNullOrWhiteSpace(Password))
                 response.AddError("Senha não preenchida");
 
