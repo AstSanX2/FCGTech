@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["FCG.csproj", "."]
-RUN dotnet restore "./FCG.csproj"
+COPY ["FCG.API.csproj", "."]
+RUN dotnet restore "./FCG.API.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./FCG.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./FCG.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./FCG.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./FCG.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FCG.dll"]
+ENTRYPOINT ["dotnet", "FCG.API.dll"]
