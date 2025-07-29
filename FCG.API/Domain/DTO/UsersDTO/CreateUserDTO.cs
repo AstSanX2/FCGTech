@@ -14,7 +14,7 @@ namespace FCG.API.Domain.DTO.UsersDTO
 
         public CreateUserDTO()
         {
-            
+
         }
 
         public override User ToEntity()

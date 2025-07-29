@@ -1,7 +1,6 @@
 ﻿using FCG.API.Domain.DTO.UsersDTO;
 using FCG.API.Domain.Enums;
 using FCG.API.Domain.Interfaces.Services;
-using FCG.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -56,7 +55,7 @@ namespace FCG.API.Controllers
         [HttpDelete("{id:length(24)}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Delete(string id)
-        { 
+        {
             var existing = await service.GetByIdAsync(ObjectId.Parse(id));
             if (existing is null) return NotFound();
 

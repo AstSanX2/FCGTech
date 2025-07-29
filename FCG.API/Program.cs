@@ -105,7 +105,6 @@ namespace FCG.API
                     };
                 });
 
-
             builder.Services.AddAuthorization();
 
             builder.Services.AddTransient<GlobalRequestMiddleware>();
