@@ -27,7 +27,7 @@ namespace FCG.API.Domain.DTO.UsersDTO
 
         public ProjectUserDTO()
         {
-            
+
         }
 
         public override Expression<Func<User, ProjectUserDTO>> ProjectExpression()

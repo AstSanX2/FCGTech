@@ -1,7 +1,4 @@
-﻿using FCG.API.Domain.DTO.Bases;
-using FCG.API.Domain.DTO.Bases.Interfaces;
-using FCG.API.Domain.Models.Validation;
-using FCG.Domain.Entities;
+﻿using FCG.Domain.Entities;
 
 namespace FCG.API.Domain.DTO.UsersDTO
 {
@@ -9,7 +6,7 @@ namespace FCG.API.Domain.DTO.UsersDTO
     {
         public CreateUserAdminDTO()
         {
-            
+
         }
 
         public override User ToEntity()

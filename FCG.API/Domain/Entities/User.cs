@@ -1,6 +1,4 @@
 ﻿using FCG.API.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
-using MongoDB.Bson;
 
 namespace FCG.Domain.Entities
 {
@@ -22,7 +20,7 @@ namespace FCG.Domain.Entities
         public User()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            
+
         }
     }
 }
