@@ -1,0 +1,33 @@
+name: Deploy to Amazon
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore ./FCG.sln
+      - name: Build
+        run: dotnet build ./FCG.sln --configuration Release --no-restore
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' 
+      - name: Restore
+        run: dotnet restore ./FCG.sln
+      - name: Test
+        run: dotnet test ./FCG.sln --verbosity normal
