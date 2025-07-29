@@ -7,7 +7,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_REGION: us-east-2
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
   EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
   IMAGE_TAG: ${{ github.sha }}
