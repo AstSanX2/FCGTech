@@ -69,8 +69,8 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f ./FCG.API/Dockerfile -t $ECR_REPOSITORY:$IMAGE_TAG ./FCG.API
-          docker push $ECR_REPOSITORY:$IMAGE_TAG
+          docker build -f ./FCG.API/Dockerfile -t ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} ./FCG.API
+          docker push ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
