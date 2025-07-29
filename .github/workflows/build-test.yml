@@ -28,5 +28,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore ./FCG.sln
       - name: Test
-        run: dotnet test ./FCG.sln --verbosity normal
+        run: dotnet test ./FCG.sln --verbosity normal --no-build
