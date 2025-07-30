@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: fcg-api
-          image: 304935836160.dkr.ecr.us-east-2.amazonaws.com/fgc-api:b708b00bcc75fd8c7356598948a71892a07078c8
+          image: 304935836160.dkr.ecr.us-east-2.amazonaws.com/fgc-api:latest
           ports:
             - containerPort: 80
