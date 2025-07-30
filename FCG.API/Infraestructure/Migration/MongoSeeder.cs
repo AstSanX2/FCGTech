@@ -21,55 +21,71 @@ namespace FCG.API.Infraestructure.Migration
         {
             _logger = logger;
 
-            // Configura a conexão com o MongoDB e obtém a coleção "Users"
-            var section = config.GetSection("MongoDB");
-            var connection = section.GetSection("ConnectionString").Value;
-            var url = new MongoUrlBuilder(connection);
-
-            var client = new MongoClient(new MongoClientSettings()
+            try
             {
-                Server = url.Server
-            });
+                // Configura a conexão com o MongoDB e obtém a coleção "Users"
+                var section = config.GetSection("MongoDB");
+                var connection = section.GetSection("ConnectionString").Value;
+                var url = new MongoUrlBuilder(connection);
 
-            // Aqui assumimos que a coleção de usuários chamará "Users"
-            _userCollection = client.GetDatabase(url.DatabaseName).GetCollection<User>(nameof(User));
+                var client = new MongoClient(new MongoClientSettings()
+                {
+                    Server = url.Server
+                });
+
+                // Aqui assumimos que a coleção de usuários chamará "Users"
+                _userCollection = client.GetDatabase(url.DatabaseName).GetCollection<User>(nameof(User));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Erro na conexão com o MongoDB: {e.Message} \n\n stack trace: \n\n {e.StackTrace}");
+            }
+
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            if (_alreadySeeded)
-                return;
-
-            _logger.LogInformation("Iniciando MongoSeeder para verificar usuário admin...");
-
-            // Filtro para encontrar se já existe algum usuário com perfil "Admin"
-            var filtro = Builders<User>.Filter.Eq(u => u.Role, Domain.Enums.UserRole.Admin);
-
-            // Verifica se existe
-            var existeAdmin = await _userCollection.Find(filtro).AnyAsync(cancellationToken);
-
-            if (!existeAdmin)
+            try
             {
-                _logger.LogInformation("Nenhum usuário Admin encontrado. Criando usuário admin padrão...");
+                if (_alreadySeeded)
+                    return;
 
-                var admin = new User
+                _logger.LogInformation("Iniciando MongoSeeder para verificar usuário admin...");
+
+                // Filtro para encontrar se já existe algum usuário com perfil "Admin"
+                var filtro = Builders<User>.Filter.Eq(u => u.Role, Domain.Enums.UserRole.Admin);
+
+                // Verifica se existe
+                var existeAdmin = await _userCollection.Find(filtro).AnyAsync(cancellationToken);
+
+                if (!existeAdmin)
                 {
-                    Name = "admin",
-                    Password = "Senha@123".ToHash(),
-                    Role = Domain.Enums.UserRole.Admin,
-                    Email = "admin@fcg.com"
-                };
+                    _logger.LogInformation("Nenhum usuário Admin encontrado. Criando usuário admin padrão...");
 
-                await _userCollection.InsertOneAsync(admin, cancellationToken: cancellationToken);
+                    var admin = new User
+                    {
+                        Name = "admin",
+                        Password = "Senha@123".ToHash(),
+                        Role = Domain.Enums.UserRole.Admin,
+                        Email = "admin@fcg.com"
+                    };
 
-                _logger.LogInformation("Usuário Admin inserido com sucesso.");
+                    await _userCollection.InsertOneAsync(admin, cancellationToken: cancellationToken);
+
+                    _logger.LogInformation("Usuário Admin inserido com sucesso.");
+                }
+                else
+                {
+                    _logger.LogInformation("Já existe ao menos um usuário Admin. Pulando criação.");
+                }
+
+                _alreadySeeded = true;
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogInformation("Já existe ao menos um usuário Admin. Pulando criação.");
+                _logger.LogError($"Erro na conexão com o MongoDB: {e.Message} \n\n stack trace: \n\n {e.StackTrace}");
             }
 
-            _alreadySeeded = true;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
