@@ -69,7 +69,9 @@ jobs:
       - name: Build, tag, and push Docker image to ECR
         run: |
           docker build -f ./FCG.API/Dockerfile -t $ECR_REPOSITORY:$IMAGE_TAG ./FCG.API
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
           docker push $ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REPOSITORY:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
