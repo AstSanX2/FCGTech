@@ -90,11 +90,11 @@ jobs:
           JWT_ISS: ${{ vars.JWT_ISS }}
         run: |
           kubectl create secret generic fcg-api-secrets \
-            --from-literal=Environment__Name="$ENV_NAME" \
-            --from-literal=MongoDB__ConnectionString="$MONGO_CONN" \
-            --from-literal=JwtOptions__Key="$JWT_KEY" \
-            --from-literal=JwtOptions__Audience="$JWT_AUD" \
-            --from-literal=JwtOptions__Issuer="$JWT_ISS" \
+            --from-literal=Environment__Name=$ENV_NAME \
+            --from-literal=MongoDB__ConnectionString=$MONGO_CONN \
+            --from-literal=JwtOptions__Key=$JWT_KEY \
+            --from-literal=JwtOptions__Audience=$JWT_AUD \
+            --from-literal=JwtOptions__Issuer=$JWT_ISS \
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy to EKS
