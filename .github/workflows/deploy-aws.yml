@@ -81,9 +81,8 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-      - name: Test cluster connection
-        run: kubectl get nodes
-        
       - name: Deploy to EKS
         run: |
-          kubectl set image deployment/fcg-api fcg-api=$ECR_REPOSITORY:$IMAGE_TAG
+          kubectl delete deployment fcg-api --ignore-not-found --insecure-skip-tls-verify
+          kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
+          kubectl rollout restart deployment/fcg-api --insecure-skip-tls-verify
