@@ -86,13 +86,14 @@ jobs:
           kubectl create secret generic fcg-api-secrets \
             --from-literal=Environment__Name=${{ secrets.ENV_NAME }} \
             --from-literal=MongoDB__ConnectionString=${{ secrets.MONGO_CONN }} \
-            --from-literal=JwtOptions__Issuer=${{ secrets.JWT_KEY }} \
-            --from-literal=JwtOptions__Issuer=${{ secrets.JWT_AUD }} \
+            --from-literal=JwtOptions__Key=${{ secrets.JWT_KEY }} \
+            --from-literal=JwtOptions__Audience=${{ secrets.JWT_AUD }} \
             --from-literal=JwtOptions__Issuer=${{ secrets.JWT_ISS }} \
             --dry-run=client -o yaml | kubectl apply -f - --insecure-skip-tls-verify --validate=false
+            
       - name: Deploy to EKS
         run: |
           kubectl apply -f k8s/service.yml --insecure-skip-tls-verify  
           kubectl delete deployment fgc-api --ignore-not-found --insecure-skip-tls-verify
-          kubectl apply -f k8s/deployment.yaml  --insecure-skip-tls-verify
+          kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
           kubectl rollout restart deployment/fgc-api --insecure-skip-tls-verify
