@@ -82,21 +82,17 @@ jobs:
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
       - name: Create Kubernetes Secrets
-        env:
-          ENV_NAME: ${{ vars.ENV_NAME }}
-          MONGO_CONN: ${{ vars.MONGO_CONN }}
-          JWT_KEY: ${{ vars.JWT_KEY }}
-          JWT_AUD: ${{ vars.JWT_AUD }}
-          JWT_ISS: ${{ vars.JWT_ISS }}
         run: |
           kubectl create secret generic fcg-api-secrets \
-            --from-literal=Environment__Name=$ENV_NAME \
-            --from-literal=MongoDB__ConnectionString=$MONGO_CONN \
-            --from-literal=JwtOptions__Key=$JWT_KEY \
-            --from-literal=JwtOptions__Audience=$JWT_AUD \
-            --from-literal=JwtOptions__Issuer=$JWT_ISS \
-            --dry-run=client -o yaml | kubectl apply -f -
-
+            --from-literal=Environment__Name=${{ secrets.ENV_NAME }} \
+            --from-literal=MongoDB__ConnectionString=${{ secrets.MONGO_CONN }} \
+            --from-literal=JwtOptions__Issuer=${{ secrets.JWT_KEY }} \
+            --from-literal=JwtOptions__Issuer=${{ secrets.JWT_AUD }} \
+            --from-literal=JwtOptions__Issuer=${{ secrets.JWT_ISS }} \
+            --dry-run=client -o yaml | kubectl apply -f - --insecure-skip-tls-verify --validate=false
       - name: Deploy to EKS
         run: |
-            kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yml --insecure-skip-tls-verify  
+          kubectl delete deployment fgc-api --ignore-not-found --insecure-skip-tls-verify
+          kubectl apply -f k8s/deployment.yaml  --insecure-skip-tls-verify
+          kubectl rollout restart deployment/fgc-api --insecure-skip-tls-verify
