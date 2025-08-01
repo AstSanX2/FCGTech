@@ -12,14 +12,24 @@ namespace FCG.API.Infraestructure.Migration
     {
         private readonly ILogger<MongoSeeder> _logger;
         private readonly IMongoCollection<User> _userCollection;
+        private readonly string _adminEmail;
+        private readonly string _adminPassword;
 
         // Para evitar rodar mais de uma vez, simplesmente encerraremos após o primeiro Run.
         private bool _alreadySeeded = false;
 
-        public MongoSeeder(IMongoDatabase database, ILogger<MongoSeeder> logger)
+        public MongoSeeder(IMongoDatabase database, ILogger<MongoSeeder> logger, IConfiguration configuration)
         {
             _logger = logger;
             _userCollection = database.GetCollection<User>(nameof(User));
+
+            _adminEmail = "admin@fcg.com";
+            _adminPassword ="Senha@123";
+
+#if !DEBUG
+            _adminEmail = configuration.GetValue<string>("AdminUser:Email") ?? throw new Exception("AdminUser não definido") ;
+            _adminPassword = configuration.GetValue<string>("AdminUser:Password") ??  throw new Exception("AdminUser não definido") ;
+#endif
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -44,9 +54,9 @@ namespace FCG.API.Infraestructure.Migration
                     var admin = new User
                     {
                         Name = "admin",
-                        Password = "Senha@123".ToHash(),
+                        Password = _adminPassword.ToHash(),
                         Role = Domain.Enums.UserRole.Admin,
-                        Email = "admin@fcg.com"
+                        Email = _adminEmail
                     };
 
                     await _userCollection.InsertOneAsync(admin, cancellationToken: cancellationToken);
