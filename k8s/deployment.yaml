@@ -17,3 +17,29 @@ spec:
           image: 304935836160.dkr.ecr.us-east-2.amazonaws.com/fgc-api:latest
           ports:
             - containerPort: 80
+          env:            
+            - name: Environment__Name
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: Environment__Name
+            - name: MongoDB__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: MongoDB__ConnectionString
+            - name: JwtOptions__Key
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: JwtOptions__Key
+            - name: JwtOptions__Audience
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: JwtOptions__Audience
+            - name: JwtOptions__Issuer
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: JwtOptions__Issuer
