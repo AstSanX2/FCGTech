@@ -86,6 +86,4 @@ jobs:
         
       - name: Deploy to EKS
         run: |
-            kubectl apply -f k8s/deployment.yaml
-            kubectl apply -f k8s/service.yaml
-            
+          kubectl set image deployment/fcg-api fcg-api=$ECR_REPOSITORY:$IMAGE_TAG
