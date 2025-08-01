@@ -81,9 +81,10 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-      - name: Create Kubernetes Secrets from GitHub Variables
+      - name: Create Kubernetes Secrets
         run: |
           kubectl create secret generic fcg-api-secrets \
+            --from-literal=Environment__Name="${{ secrets.Environment__Name }}" \
             --from-literal=MongoDB__ConnectionString="${{ secrets.MONGO_CONN }}" \
             --from-literal=JwtOptions__Key="${{ secrets.JWT_KEY }}" \
             --from-literal=JwtOptions__Audience="${{ secrets.JWT_AUD }}" \
