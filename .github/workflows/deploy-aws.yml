@@ -81,9 +81,22 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-      - name: Test cluster connection
-        run: kubectl get nodes
-        
+      - name: Create Kubernetes Secrets from GitHub Variables
+        env:
+          ENV_NAME: ${{ secrets.ENV_NAME }}
+          MONGO_CONN: ${{ secrets.MONGO_CONN }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          JWT_AUD: ${{ secrets.JWT_AUD }}
+          JWT_ISS: ${{ secrets.JWT_ISS }}
+        run: |
+          kubectl create secret generic fcg-api-secrets \
+            --from-literal=Environment__Name="$ENV_NAME" \
+            --from-literal=MongoDB__ConnectionString="$MONGO_CONN" \
+            --from-literal=JwtOptions__Key="$JWT_KEY" \
+            --from-literal=JwtOptions__Audience="$JWT_AUD" \
+            --from-literal=JwtOptions__Issuer="$JWT_ISS" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy to EKS
         run: |
-          kubectl set image deployment/fcg-api fcg-api=$ECR_REPOSITORY:$IMAGE_TAG
+            kubectl apply -f k8s/deployment.yaml
