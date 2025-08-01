@@ -83,6 +83,4 @@ jobs:
 
       - name: Deploy to EKS
         run: |
-          kubectl delete deployment fcg-api --ignore-not-found --insecure-skip-tls-verify
-          kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
-          kubectl rollout restart deployment/fcg-api --insecure-skip-tls-verify
+          kubectl apply -f k8s/deployment.yaml
