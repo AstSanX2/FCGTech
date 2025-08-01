@@ -4,6 +4,7 @@ using FCG.API.Domain.Interfaces.Services;
 using FCG.API.Helpers;
 using FCG.API.Helpers.Extensions;
 using FCG.API.Infraestructure.Migration;
+using FCG.API.Infraestructure.Options;
 using FCG.API.Infraestructure.Repositories;
 using FCG.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -109,6 +110,9 @@ namespace FCG.API
 
             builder.Services.AddTransient<GlobalRequestMiddleware>();
             builder.Services.AddHostedService<MongoSeeder>();
+
+            builder.Services.Configure<EnvironmentOptions>(
+                builder.Configuration.GetSection("Environment"));
 
             var app = builder.Build();
 
