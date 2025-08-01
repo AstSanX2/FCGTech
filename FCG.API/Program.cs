@@ -37,21 +37,26 @@ namespace FCG.API
                 var section = config.GetSection("MongoDB");
                 var connection = section.GetSection("ConnectionString").Value;
 
-                var url = new MongoUrlBuilder(connection);
-
-                var client = new MongoClient(new MongoClientSettings()
-                {
-                    Server = url.Server
-                });
+                var settings = MongoClientSettings.FromConnectionString(connection);
+                settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+                var client = new MongoClient(settings);
                 return client;
             });
-
             builder.Services.AddSingleton(s =>
             {
                 var section = config.GetSection("MongoDB");
-                var connection = section.GetSection("ConnectionString").Value;
-                var url = new MongoUrlBuilder(connection);
-                return s.GetService<IMongoClient>()!.GetDatabase(url.DatabaseName);
+                var connectionString = section.GetValue<string>("ConnectionString");
+
+                var mongoUrl = new MongoUrl(connectionString);
+                var databaseName = mongoUrl.DatabaseName;
+
+                if (string.IsNullOrEmpty(databaseName))
+                {
+                    throw new InvalidOperationException("Database name must be specified in the connection string.");
+                }
+
+                var client = s.GetRequiredService<IMongoClient>();
+                return client.GetDatabase(databaseName);
             });
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();

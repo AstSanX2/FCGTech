@@ -16,31 +16,10 @@ namespace FCG.API.Infraestructure.Migration
         // Para evitar rodar mais de uma vez, simplesmente encerraremos após o primeiro Run.
         private bool _alreadySeeded = false;
 
-        public MongoSeeder(IConfiguration config,
-            ILogger<MongoSeeder> logger)
+        public MongoSeeder(IMongoDatabase database, ILogger<MongoSeeder> logger)
         {
             _logger = logger;
-
-            try
-            {
-                // Configura a conexão com o MongoDB e obtém a coleção "Users"
-                var section = config.GetSection("MongoDB");
-                var connection = section.GetSection("ConnectionString").Value;
-                var url = new MongoUrlBuilder(connection);
-
-                var client = new MongoClient(new MongoClientSettings()
-                {
-                    Server = url.Server
-                });
-
-                // Aqui assumimos que a coleção de usuários chamará "Users"
-                _userCollection = client.GetDatabase(url.DatabaseName).GetCollection<User>(nameof(User));
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Erro na conexão com o MongoDB: {e.Message} \n\n stack trace: \n\n {e.StackTrace}");
-            }
-
+            _userCollection = database.GetCollection<User>(nameof(User));
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
