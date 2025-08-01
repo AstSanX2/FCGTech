@@ -21,6 +21,10 @@ namespace FCG.API.Application.Services
             if (validationResult.HasError)
                 return ResponseModel<ObjectId>.BadRequest(validationResult.ToString());
 
+            User user = await UserRepository.FindOneAsync(user => user.Email == registerUserRequest.Email);
+            if (user is not null)
+                return ResponseModel<ObjectId>.BadRequest("Email de Usuário já registrado");
+
             var result = await UserRepository.CreateAsync(registerUserRequest);
 
             return ResponseModel<ObjectId>.Ok(result._id);
@@ -34,6 +38,8 @@ namespace FCG.API.Application.Services
                 return ResponseModel<AuthenticationTokenDTO>.BadRequest(validationResult.ToString());
 
             User user = await UserRepository.FindOneAsync(user => user.Email == loginUserRequest.Email);
+            if(user is null)
+                return ResponseModel<AuthenticationTokenDTO>.BadRequest("Login Inválido");
 
             if (user.Password.Equals(loginUserRequest.Password.ToHash()))
             {
