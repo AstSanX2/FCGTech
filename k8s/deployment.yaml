@@ -45,3 +45,13 @@ spec:
                 secretKeyRef:
                   name: fcg-api-secrets
                   key: JwtOptions__Issuer
+            - name: AdminUser__Email
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: AdminUser__Email
+            - name: AdminUser__Password
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-api-secrets
+                  key: AdminUser__Password
