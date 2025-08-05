@@ -53,7 +53,10 @@ Este projeto implementa o **mínimo produto viável (MVP)** de uma plataforma de
 - **Injeção de Dependência**: Microsoft.Extensions.DependencyInjection  
 - **Modelagem de Domínio**: Pastas separadas em Domain, Application, Infraestrutura  
 - **Logs e Middleware**: Serilog  
-- **Containerização (opcional)**: Docker, Docker Compose  
+- **Containerização**: Docker, Docker Compose  
+- **Orquestração e Deploy**: Kubernetes (manifests em `k8s/`), Amazon EKS  
+- **Pipelines CI/CD**: GitHub Actions (`.github/workflows/build-test.yml`, `.github/workflows/deploy-aws.yml`)  
+- **Monitoramento e Observabilidade**: New Relic (instrumentação automática via manifest Kubernetes)  
 
 ---
 
@@ -216,6 +219,16 @@ FCGTech/
 ├─ FCG.Tests/                ← Projeto de testes xUnit (mock usando Moq)  
 │   └─ ServiceTests/         ← Testes de UserService e GameService  
 │  
+├─ k8s/                      ← Manifests Kubernetes  
+│   ├─ deployment.yaml       ← Deployment da aplicação na AWS EKS  
+│   ├─ service.yaml          ← Service LoadBalancer para expor a API  
+│   └─ newrelic-instrumentation.yaml ← Instrumentação New Relic para monitoramento  
+│  
+├─ .github/  
+│   └─ workflows/  
+│       ├─ build-test.yml    ← Pipeline de build e testes (CI)  
+│       └─ deploy-aws.yml    ← Pipeline de deploy automatizado para AWS EKS (CD)  
+│  
 ├─ FCG.sln                   ← Solução .NET que referencia FCG.API e FCG.Tests  
 ├─ LICENSE.txt               ← Licença do projeto (ex: MIT)  
 └─ README.md                 ← Este arquivo  
@@ -244,6 +257,47 @@ FCGTech/
 
 - **Seed de Admin**  
   - MongoSeeder (implementado como IHostedService) executa ao iniciar a aplicação e verifica se já existe um usuário Admin. Se não houver, cria um Admin “padrão”.
+
+---
+
+## CI/CD, Deploy em AWS EKS, Kubernetes e Observabilidade
+
+### Integração Contínua e Deploy Contínuo (CI/CD)
+
+O projeto utiliza **GitHub Actions** para automação de build, testes e deploy:
+
+- **.github/workflows/build-test.yml**  
+  Executa build e testes automatizados a cada pull request na branch `master`, garantindo que apenas código validado seja integrado.
+
+- **.github/workflows/deploy-aws.yml**  
+  Realiza build, testes e, em caso de sucesso, faz o deploy automático para o cluster AWS EKS sempre que há push na branch `master`. O pipeline:
+  - Constrói e publica a imagem Docker no Amazon ECR.
+  - Atualiza o cluster EKS aplicando os manifests Kubernetes.
+  - Reinicia o deployment para garantir atualização da aplicação.
+
+### Deploy em AWS EKS com Kubernetes
+
+O deploy é realizado em um cluster **Amazon EKS** (Elastic Kubernetes Service):
+
+- **k8s/deployment.yaml**  
+  Define o deployment do pod da API, especificando imagem, variáveis de ambiente (via secrets) e replica única.
+
+- **k8s/service.yaml**  
+  Expõe a aplicação via um serviço do tipo `LoadBalancer`, tornando a API acessível externamente na porta 80, redirecionando para o container na porta 8080.
+
+### Monitoramento com New Relic
+
+A instrumentação de monitoramento é feita via **New Relic**:
+
+- **k8s/newrelic-instrumentation.yaml**  
+  Manifesta a configuração do agente New Relic para aplicações .NET, selecionando pods e namespaces específicos para instrumentação automática.
+  - Permite rastreamento de performance, erros e métricas da aplicação diretamente no painel New Relic, facilitando observabilidade e troubleshooting em produção.
+
+### Resumo dos Arquivos Kubernetes
+
+- `k8s/deployment.yaml`: Gerencia ciclo de vida dos pods da API.
+- `k8s/service.yaml`: Expõe a API para acesso externo.
+- `k8s/newrelic-instrumentation.yaml`: Habilita monitoramento APM via New Relic.
 
 ---
 
@@ -340,4 +394,3 @@ Exemplo de documentos reais na coleção Games:
   - Os campos ReleaseDate e LastUpdateDate utilizam ISODate para manter padrão de data/hora compatível com o driver MongoDB.
   - O uso de NumberDecimal em Price garante precisão ao armazenar valores monetários.
   - Não há embedding de informações de usuário dentro de Games, pois a relação principal é gerenciada pela lógica da aplicação (por exemplo, uma tabela de associação ou conservação de IDs em arrays se necessário em fases futuras).
-
